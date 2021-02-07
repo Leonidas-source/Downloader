@@ -1,0 +1,61 @@
+#!/bin/bash
+playlist_only_audio() {
+  clear
+  echo "set URL"
+  read url
+  python youtube-dl -x --audio-format flac --yes-playlist $url
+}
+audio() {
+  clear
+  echo "set URL"
+  read url
+  python youtube-dl -x --audio-format flac --no-playlist $url
+}
+video() {
+  clear
+  echo "set URL"
+  read url
+  python youtube-dl --recode-video mp4 --no-playlist $url
+}
+playlist() {
+  clear
+  echo "set URL"
+  read url
+  python youtube-dl --yes-playlist $url
+}
+menu() {
+  clear
+  echo "set mode
+  1) download a playlist
+  2) download a video
+  3) download an audio
+  4) download a playlist(only audio)"
+  read answer
+  [ "$answer" == "1" ] && playlist
+  [ "$answer" == "2" ] && video
+  [ "$answer" == "3" ] && audio
+  [ "$answer" == "4" ] && playlist_only_audio
+}
+check() {
+  ls /usr/bin | grep -w "wget" || error
+  ls /usr/bin | grep -w "python" || error2
+  ls | grep -w "youtube-dl" || error1
+}
+error() {
+  clear
+  echo "please install wget"
+  exit
+}
+error1() {
+  clear
+  wget https://youtube-dl.org/downloads/latest/youtube-dl
+  chmod +x youtube-dl
+}
+error2() {
+  clear
+  echo "install python"
+  exit
+}
+check
+menu
+clear
